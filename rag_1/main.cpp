@@ -21,6 +21,7 @@
 #include <string>
 #include <stdexcept>
 #include <shlwapi.h>
+#include <thread>
 
 #include "nlohmann/json.hpp"
 #include "include/my_todo.hpp"
@@ -232,7 +233,7 @@ std::string rag_search(std::string query) {
 }
 
 std::wstring action_handler(const std::wstring& data) {
-    std::lock_guard<std::mutex> lk(g_mutex);
+    //std::lock_guard<std::mutex> lk(g_mutex);
     ActionResponse resp;
     try {    
         resp.ret = 500;
@@ -349,13 +350,25 @@ static void InitWebView2(HWND hWnd)
                                             std::string data_str = j1.at("data").get<std::string>();
                                             std::wstring data_str_w = StringToWString(data_str);
                                             //MessageBoxW(g_hWnd, data_str_w.c_str(), L"C++ 受信", MB_OK);
-                                            auto resp = action_handler(msgStr);
+                                            // 重い処理は別スレッド
+                                            std::thread([msgStr]() {
+                                                //std::this_thread::sleep_for(
+                                                //    std::chrono::seconds(5));
+                                                auto resp = action_handler(msgStr);
 
+                                                std::wstring result = resp;
+
+                                                // WebView2操作はUIスレッドへ戻す
+                                                 PostMessage(
+                                                     g_hWnd,
+                                                     WM_APP + 1,
+                                                     (WPARAM)new std::wstring(result),
+                                                     0);
+                                            }).detach();                                           
                                             // 返信メッセージを作成
-                                            std::wstring response = resp;
-                                            
+                                            //std::wstring response = resp;
                                             // JS にメッセージを送信
-                                            sender->PostWebMessageAsString(response.c_str());
+                                            //sender->PostWebMessageAsString(response.c_str());
                                         }
                                         return S_OK;
                                     }
@@ -429,16 +442,27 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPara
         return 0;
 
     // ── キーボードショートカット ──────────────────────────
-    case WM_KEYDOWN:
-        if (wParam == VK_F5 && g_webview)
+     case WM_KEYDOWN:
+         if (wParam == VK_F5 && g_webview)
+         {
+             g_webview->Reload();               // F5: リロード
+         }
+         else if (wParam == VK_F12 && g_webview)
+         {
+             g_webview->OpenDevToolsWindow();   // F12: DevTools
+         }
+         return 0;
+
+    case WM_APP + 1:
         {
-            g_webview->Reload();               // F5: リロード
+            std::wstring* result = reinterpret_cast<std::wstring*>(wParam);
+            if (result && g_webview)
+            {
+                g_webview->PostWebMessageAsString(result->c_str());
+            }
+            delete result;
+            return 0;
         }
-        else if (wParam == VK_F12 && g_webview)
-        {
-            g_webview->OpenDevToolsWindow();   // F12: DevTools
-        }
-        return 0;
 
     default:
         return DefWindowProcW(hWnd, msg, wParam, lParam);

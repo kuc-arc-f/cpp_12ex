@@ -38,24 +38,21 @@ export default function Chat() {
       const sendJson = JSON.stringify(sendData)
       if (window.chrome && window.chrome.webview) {
         const eventHandler = (event) => {
-          setTimeout(() => {
-            const resp = event.data;
-            console.log("resp=" + resp)
-            if(resp){
-              const target = JSON.parse(resp)
-              console.log(target)
-              const targetHtml = marked.parse(target.data);
-              setText(targetHtml);
-            }
-            window.chrome.webview.removeEventListener('message', eventHandler);
-            setIsLoading(false);
-          }, 0);          
+          const resp = event.data;
+          console.log("resp=" + resp)
+          if(resp){
+            const target = JSON.parse(resp)
+            console.log(target)
+            const targetHtml = marked.parse(target.data);
+            setText(targetHtml);
+          }
+          window.chrome.webview.removeEventListener('message', eventHandler);
+          setIsLoading(false);        
         }
         window.chrome.webview.addEventListener('message', eventHandler);
         //post
         window.chrome.webview.postMessage(sendJson);        
       }
-
       return;
     } catch(e){
       console.error(e);
