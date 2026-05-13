@@ -16,6 +16,11 @@ C++ Window Webview2 + RAG Search + React , LLVM CLang
 * windows11
 
 ***
+* image
+
+![img1](/images/rag_1.png)
+
+***
 ### vector data add
 
 https://github.com/kuc-arc-f/cpp_6ex/tree/main/rag_11qd
