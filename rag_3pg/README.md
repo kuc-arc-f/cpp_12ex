@@ -78,3 +78,8 @@ clang++ -target x86_64-pc-windows-msvc -m64 -std=c++17 -O2 ^
 
 ```
 
+***
+### blog
+
+https://zenn.dev/knaka0209/scraps/baaf4c51b6e3a7
+
