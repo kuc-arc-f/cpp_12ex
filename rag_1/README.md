@@ -10,7 +10,9 @@
 
 C++ Window Webview2 + RAG Search + React , LLVM CLang
 
+
 * LLVM CLang use
+* Qdrant database
 * visual studio 2026 community
 * node 24
 * windows11
@@ -75,4 +77,9 @@ clang++ -target x86_64-pc-windows-msvc -m64 -std=c++17 -O2 main.cpp -o main.exe 
   -lWebView2Loader.dll -luser32 -lgdi32 -lole32 -loleaut32  -llibcurl
 
 ```
+
+***
+### blog
+
+https://zenn.dev/knaka0209/scraps/11dee6eb3f4db6
 
