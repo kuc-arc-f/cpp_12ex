@@ -76,3 +76,15 @@ main.cpp -o main.exe
 
 ```
 
+***
+* start
+
+* embed
+```
+.\main.exe embed
+```
+
+* search
+```
+.\main.exe search hello
+```
