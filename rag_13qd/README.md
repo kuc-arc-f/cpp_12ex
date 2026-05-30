@@ -10,6 +10,7 @@
 
 C++ Window  RAG Search CLI , LLVM CLang
 
+* Qdrant database
 * LLVM CLang use
 * visual studio 2026 community
 * windows11
