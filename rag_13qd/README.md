@@ -70,3 +70,8 @@ nmake all
 #search
 .\main.exe search hello
 ```
+
+***
+### blog
+
+https://zenn.dev/knaka0209/scraps/f8db96e4a76798
