@@ -114,7 +114,8 @@ public:
                 res_item.content = data.content;
                 res_item.distance = distance;
                 //std::cout << data.id << ", distance=" << distance << std::endl;
-                if(distance > 0.4) {
+                //if(distance > 0.5) {
+                if(distance > 0.6) {
                     result_items.push_back(res_item);
                 }
             }
